@@ -1,0 +1,11 @@
+a1,a2,a3,Outcome
+TRUE,Hot,High,No
+TRUE,Hot,High,No
+FALSE,Hot,High,Yes
+FALSE,Cool,Normal,Yes
+FALSE,Cool,Normal,Yes
+TRUE,Cool,High,No
+TRUE,Hot,High,No
+TRUE,Hot,Normal,Yes
+FALSE,Cool,Normal,Yes
+FALSE,Cool,High,Yes
