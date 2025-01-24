@@ -1,0 +1,29 @@
+let
+    fnDateTable = (StartDate as date, EndDate as date, FYStartMonth as number) as table =>
+    let
+        // Calculate the total number of days
+        DayCount = Duration.Days(Duration.From(EndDate - StartDate)) + 1,
+        // Create a list of dates
+        Source = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+        // Convert the list to a table
+        TableFromList = Table.FromList(Source, Splitter.SplitByNothing(), {"Date"}),
+        // Change the type of the Date column to date
+        ChangedType = Table.TransformColumnTypes(TableFromList, {{"Date", type date}}),
+        // Add Year column
+        AddYear = Table.AddColumn(ChangedType, "Year", each Date.Year([Date]), Int64.Type),
+        // Add Month column
+        AddMonth = Table.AddColumn(AddYear, "Month", each Date.Month([Date]), Int64.Type),
+        // Add Day column
+        AddDay = Table.AddColumn(AddMonth, "Day", each Date.Day([Date]), Int64.Type),
+        // Add Quarter column
+        AddQuarter = Table.AddColumn(AddDay, "Quarter", each Date.QuarterOfYear([Date]), Int64.Type),
+        // Add Month Name column
+        AddMonthName = Table.AddColumn(AddQuarter, "Month Name", each Date.ToText([Date], "MMMM"), type text),
+        // Add Day Name column
+        AddDayName = Table.AddColumn(AddMonthName, "Day Name", each Date.ToText([Date], "dddd"), type text),
+        // Add Fiscal Year column
+        AddFiscalYear = Table.AddColumn(AddDayName, "Fiscal Year", each if Date.Month([Date]) >= FYStartMonth then Date.Year([Date]) + 1 else Date.Year([Date]), Int64.Type)
+    in
+        AddFiscalYear
+in
+    fnDateTable
